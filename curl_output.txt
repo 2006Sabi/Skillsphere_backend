@@ -1,0 +1,21 @@
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:5000...
+* Connected to localhost (::1) port 5000
+* using HTTP/1.x
+> GET /api/users/me HTTP/1.1
+> Host: localhost:5000
+> User-Agent: curl/8.14.1
+> Accept: */*
+>  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MzdhMTlkMTk0OTNkNWU0NDg3ZGRkYiIsImlhdCI6MTc2NTc5MDQ2MSwiZXhwIjoxNzY2Mzk1MjYxfQ.KISHXcynHfFY7lc4mUBrXBSnuS54ltrQN9Bqtlmim54
+> 
+* Request completely sent off
+< HTTP/1.1 400 Bad Request
+< Connection: close
+< 
+{ [0 bytes data]
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* shutting down connection #0

@@ -1,0 +1,1 @@
+Backend utilities folder - frontend uses localStorage; backend uses JWT & MongoDB.
