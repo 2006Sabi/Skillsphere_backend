@@ -120,3 +120,33 @@ export const deleteProject = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Server Error" });
     }
 };
+
+// Update Course
+export const updateCourse = async (req: Request, res: Response) => {
+    try {
+        const updatedCourse = await Course.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true } // Return the updated document
+        );
+        if (!updatedCourse) return res.status(404).json({ message: "Course not found" });
+        res.json(updatedCourse);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+// Update Project
+export const updateProject = async (req: Request, res: Response) => {
+    try {
+        const updatedProject = await Project.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        if (!updatedProject) return res.status(404).json({ message: "Project not found" });
+        res.json(updatedProject);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};

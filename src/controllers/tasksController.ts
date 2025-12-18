@@ -55,6 +55,7 @@ export const createTask = async (req: Request, res: Response) => {
       type: "task",
       dueDate: dueDate ? new Date(dueDate) : null,
       priority: priority ?? "medium",
+      status: "todo", // Default new tasks to todo
       completed: false,
     });
 

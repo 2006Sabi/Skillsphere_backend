@@ -8,6 +8,7 @@ export interface ITask extends Document {
   dueDate?: Date | null;
   priority?: "high" | "medium" | "low";
   completed?: boolean;
+  status?: "todo" | "in-progress" | "done";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -25,6 +26,11 @@ const TaskSchema = new Schema<ITask>(
       default: "medium",
     },
     completed: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["todo", "in-progress", "done"],
+      default: "todo",
+    },
   },
   { timestamps: true }
 );

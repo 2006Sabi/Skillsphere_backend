@@ -7,9 +7,11 @@ import {
     getDashboardStats,
     getAllCourses,
     createCourse,
+    updateCourse,
     deleteCourse,
     getAllProjects,
     createProject,
+    updateProject,
     deleteProject,
 } from "../controllers/adminController";
 
@@ -26,11 +28,13 @@ router.get("/stats", getDashboardStats);
 // Course Routes
 router.get("/courses", getAllCourses);
 router.post("/courses", createCourse);
+router.put("/courses/:id", updateCourse as any);
 router.delete("/courses/:id", deleteCourse);
 
 // Project Routes
 router.get("/projects", getAllProjects);
 router.post("/projects", createProject);
+router.put("/projects/:id", updateProject as any);
 router.delete("/projects/:id", deleteProject);
 
 export default router;
