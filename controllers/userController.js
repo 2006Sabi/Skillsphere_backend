@@ -1,13 +1,13 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
-const Feedback = require("../models/feedback"); // Import Feedback model
+const Feedback = require("../models/feedback");
 const { generateToken } = require("../utils/tokenUtils");
 
 // Register function
 const register = async (req, res) => {
   const { name, email, password, role } = req.body;
-  console.log("regiter data :", req.body);
+  console.log("register data :", req.body);
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -53,33 +53,32 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-     if (user) {
-       return res.status(200).json({ message: "Login successfull" });
-     }
 
     // Validate password
-    console.log("password : ", user.password);
-    // const isMatch = await bcrypt.compare(password, user.password);
-    console.log("ismatch : ", isMatch);
-    if (!user) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Generate token
-    // const token = generateToken(user); // Ensure generateToken function is properly implemented
+    const token = generateToken(user);
+
     return res.status(200).json({ message: "Login successful", token });
   } catch (error) {
-    console.error("Login error: ", error); // Log the error for debugging
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
+    console.error("Login error: ", error);
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 // Get user profile (Protected)
 const getUserProfile = async (req, res) => {
   try {
-    const user = req.user;
+    // req.user is set by the auth middleware
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json({
       id: user._id,
       name: user.name,
@@ -95,14 +94,11 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!name && !email && !password) {
-    return res
-      .status(400)
-      .json({ message: "At least one field is required to update" });
-  }
-
   try {
-    const user = req.user;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     if (name) user.name = name;
     if (email) user.email = email;
@@ -136,7 +132,7 @@ const submitFeedback = async (req, res) => {
 
   try {
     const feedback = new Feedback({
-      user: req.user._id,
+      user: req.user.id,
       message,
     });
 

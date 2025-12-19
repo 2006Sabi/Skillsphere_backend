@@ -1,32 +1,21 @@
-const express = require("express");
-const connectDB = require("./config/dbConfig");
-const authRoutes = require("./routes/authMethods");
-const morgan = require("morgan");
-const dotenv = require("dotenv");
-const cors = require("cors");
+const mongoose = require("mongoose");
 
-dotenv.config();
-connectDB();
+const connectDB = async () => {
+  try {
+    console.log("MONGO_URI =", process.env.MONGO_URI);
 
-const app = express();
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is missing in .env file");
+    }
 
-// Middleware
-app.use(express.json()); // Parse JSON requests
-app.use(morgan("dev")); // Log HTTP requests
+    await mongoose.connect(process.env.MONGO_URI);
 
-// Configure CORS
-app.use(
-  cors({
-    origin: "*", // Allow all origins (or replace with frontend URL for security)
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-  })
-);
+    console.log("✅ MongoDB connected successfully");
+  } catch (error) {
+    console.error("❌ MongoDB connection failed:");
+    console.error(error.message);
+    process.exit(1);
+  }
+};
 
-// Routes
-app.use("/api", authRoutes); // Use authMethods for authentication routes
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = connectDB;
