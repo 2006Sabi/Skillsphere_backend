@@ -1,43 +1,33 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-
-const userSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      match: [
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "Please fill a valid email address",
-      ],
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const UserSchema = new mongoose_1.Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    bio: String,
+    city: String,
+    country: String,
+    phone: String,
+    /** NEW FIELDS */
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    isBlocked: { type: Boolean, default: false },
+    avatarUrl: { type: String, default: null },
+    skillLevel: {
+        type: String,
+        enum: ["Beginner", "Intermediate", "Advanced"],
+        default: "Beginner",
     },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
+    completedProjects: {
+        type: Number,
+        default: 0,
     },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-  },
-  { timestamps: true }
-);
-
-userSchema.pre("save", async function (next) {
-  if (this.isModified("password") || this.isNew) {
-    this.password = await bcrypt.hash(this.password, 10); // Hash password
-  }
-  next();
-});
-
-userSchema.methods.isValidPassword = async function (password) {
-  return await bcrypt.compare(password, this.password); // Compare provided password with stored hash
-};
-const user = mongoose.model("User", userSchema);
-
-module.exports =user
+    skills: [String],
+    completedCourses: [String],
+    learningStreak: { type: Number, default: 0 },
+    todayStudyTimeHours: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+exports.default = (0, mongoose_1.model)("User", UserSchema);
